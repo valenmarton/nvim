@@ -1,7 +1,9 @@
 -- basic nvim option settings
 vim.opt.guicursor = ""
+vim.opt.statusline = "=== %f ==="
+vim.opt.ignorecase = true
 
-vim.opt.cursorline = true
+-- vim.opt.cursorline = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
@@ -13,7 +15,6 @@ vim.opt.expandtab = true
 vim.opt.smartindent = true
 
 vim.opt.wrap = true
-
 
 vim.opt.swapfile = false
 vim.opt.backup = false
