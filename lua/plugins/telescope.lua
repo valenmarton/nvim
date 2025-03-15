@@ -61,12 +61,19 @@ return {
 			})
 		end, {})
 		-- find directories
+		-- vim.keymap.set("n", "<leader>fd", function()
+		-- 	builtin.find_files({
+		-- 		-- hidden = true,                    -- Include hidden files (files starting with a dot)
+		-- 		prompt_prefix = "Directories > ", -- Custom title for the picker
+		-- 		-- :Telescope fd find_command=fd,-t=d
+		-- 		find_command = { "find", ".", "-type", "d" }, -- only find directories
+		-- 	})
+		-- end, {})
+		-- dependencies: fd
 		vim.keymap.set("n", "<leader>fd", function()
 			builtin.find_files({
-				-- hidden = true,                    -- Include hidden files (files starting with a dot)
 				prompt_prefix = "Directories > ", -- Custom title for the picker
-				-- :Telescope fd find_command=fd,-t=d
-				find_command = { "find", ".", "-type", "d" }, -- only find directories
+				find_command = { "fd", "-t", "d", "--ignore-file", ".gitignore" }, -- Use fd with gitignore
 			})
 		end, {})
 		vim.keymap.set("n", "<leader>sql", builtin.quickfix, {})
