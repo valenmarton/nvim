@@ -8,8 +8,8 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- better half page scroll
--- vim.keymap.set("n", "<C-d>", "<C-d>zz")
--- vim.keymap.set("n", "<C-u>", "<C-u>zz")
+vim.keymap.set("n", "<C-d>", "10jzz")
+vim.keymap.set("n", "<C-u>", "10kzz")
 
 -- clipboard
 vim.keymap.set("n", "x", '"_x')
