@@ -1,6 +1,7 @@
 -- exchanged with oil.nvim
 -- vim.keymap.set("n", "<bs><bs>", "<cmd>Ex<cr>", { desc = "Open parent directory" })
 vim.keymap.set("n", "<bs><bs>", "<cmd>Oil<cr>", { desc = "Open parent directory" })
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open parent directory" })
 
 -- move lines
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
