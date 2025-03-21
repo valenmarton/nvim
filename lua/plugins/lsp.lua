@@ -174,6 +174,13 @@ return {
 				["ts_ls"] = function()
 					local lspconfig = require("lspconfig")
 					lspconfig.ts_ls.setup({
+						init_options = {
+							preferences = {
+								-- other preferences...
+								importModuleSpecifierPreference = "relative",
+								importModuleSpecifierEnding = "minimal",
+							},
+						},
 						-- cmd = { "/home/martonv/.local/share/nvim/mason/bin/typescript-language-server", "--stdio", "--log-level", "trace" },
 						-- trace = "verbose",
 						-- on_attach = function(client, bufnr)
@@ -183,6 +190,10 @@ return {
 						-- end,
 						capabilities = capabilities,
 						settings = {
+							-- typescript = {
+							-- 	importModuleSpecifierPreference = "relative",
+							-- 	importModuleSpecifierEnding = "minimal",
+							-- },
 							javascript = {
 								enable = false,
 								format = {
