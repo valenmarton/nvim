@@ -114,6 +114,7 @@ return {
 	dependencies = {
 		"williamboman/mason.nvim",
 		"williamboman/mason-lspconfig.nvim",
+		"saghen/blink.cmp",
 	},
 
 	config = function()
@@ -133,14 +134,24 @@ return {
 		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
 		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
 
-		local cmp = require("cmp")
-		local cmp_lsp = require("cmp_nvim_lsp")
-		local capabilities = vim.tbl_deep_extend(
-			"force",
-			{},
-			vim.lsp.protocol.make_client_capabilities(),
-			cmp_lsp.default_capabilities()
-		)
+		-- local cmp = require("cmp")
+		-- local cmp_lsp = require("cmp_nvim_lsp")
+		config = function(_, opts)
+			local lspconfig = require("lspconfig")
+			for server, config in pairs(opts.servers) do
+				-- passing config.capabilities to blink.cmp merges with the capabilities in your
+				-- `opts[server].capabilities, if you've defined it
+				config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
+				lspconfig[server].setup(config)
+			end
+		end
+
+		-- local capabilities = vim.tbl_deep_extend(
+		-- 	"force",
+		-- 	{},
+		-- 	vim.lsp.protocol.make_client_capabilities(),
+		-- 	cmp_lsp.default_capabilities()
+		-- )
 		require("java").setup()
 		require("mason").setup()
 		require("mason-lspconfig").setup({
@@ -214,7 +225,7 @@ return {
 					lspconfig.eslint.setup({
 						capabilities = capabilities,
 						settings = {
-							validate = "off",
+							-- validate = "off",
 							-- quiet = true,
 							-- silent = true,
 							-- eslint = {
@@ -258,66 +269,66 @@ return {
 		})
 
 		-- TODO: swap cmp to blink
-		cmp.setup({
-			-- snippet = {
-			--     expand = function(args)
-			--         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-			--     end,
-			-- },
-			mapping = cmp.mapping.preset.insert({
-				["<Tab>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						cmp.select_next_item()
-					else
-						fallback()
-					end
-				end, { "i" }),
-				["<S-Tab>"] = cmp.mapping(function(fallback)
-					if cmp.visible() then
-						cmp.select_prev_item()
-					else
-						fallback()
-					end
-				end, { "i" }),
-				["<C-Space>"] = cmp.mapping.complete(),
-				["<C-e>"] = cmp.mapping.abort(),
-				["<CR>"] = cmp.mapping.confirm({ select = false }),
-			}),
-			sources = cmp.config.sources({
-				{ name = "nvim_lsp", keyword_length = 0 },
-				{ name = "path" },
-				-- { name = 'vsnip' }, -- For vsnip users.
-				-- { name = 'luasnip' }, -- For luasnip users.
-				-- { name = 'ultisnips' }, -- For ultisnips users.
-				-- { name = 'snippy' }, -- For snippy users.
-			}, {
-				{ name = "buffer" },
-			}),
-			formatting = {
-				format = function(entry, vim_item)
-					-- Show Javadoc in completion
-					vim_item.menu = ({
-						nvim_lsp = "[LSP]",
-					})[entry.source.name]
-					return vim_item
-				end,
-			},
-			-- window = {
-			--     completion = cmp.config.window.bordered(),
-			--     documentation = cmp.config.window.bordered(), -- Ensure doc popup is enabled
-			-- },
-			experimental = {
-				ghost_text = true,
-			},
-		})
-
+		-- cmp.setup({
+		-- 	-- snippet = {
+		-- 	--     expand = function(args)
+		-- 	--         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+		-- 	--     end,
+		-- 	-- },
+		-- 	mapping = cmp.mapping.preset.insert({
+		-- 		["<Tab>"] = cmp.mapping(function(fallback)
+		-- 			if cmp.visible() then
+		-- 				cmp.select_next_item()
+		-- 			else
+		-- 				fallback()
+		-- 			end
+		-- 		end, { "i" }),
+		-- 		["<S-Tab>"] = cmp.mapping(function(fallback)
+		-- 			if cmp.visible() then
+		-- 				cmp.select_prev_item()
+		-- 			else
+		-- 				fallback()
+		-- 			end
+		-- 		end, { "i" }),
+		-- 		["<C-Space>"] = cmp.mapping.complete(),
+		-- 		["<C-e>"] = cmp.mapping.abort(),
+		-- 		["<CR>"] = cmp.mapping.confirm({ select = false }),
+		-- 	}),
+		-- 	sources = cmp.config.sources({
+		-- 		{ name = "nvim_lsp", keyword_length = 0 },
+		-- 		{ name = "path" },
+		-- 		-- { name = 'vsnip' }, -- For vsnip users.
+		-- 		-- { name = 'luasnip' }, -- For luasnip users.
+		-- 		-- { name = 'ultisnips' }, -- For ultisnips users.
+		-- 		-- { name = 'snippy' }, -- For snippy users.
+		-- 	}, {
+		-- 		{ name = "buffer" },
+		-- 	}),
+		-- 	formatting = {
+		-- 		format = function(entry, vim_item)
+		-- 			-- Show Javadoc in completion
+		-- 			vim_item.menu = ({
+		-- 				nvim_lsp = "[LSP]",
+		-- 			})[entry.source.name]
+		-- 			return vim_item
+		-- 		end,
+		-- 	},
+		-- 	-- window = {
+		-- 	--     completion = cmp.config.window.bordered(),
+		-- 	--     documentation = cmp.config.window.bordered(), -- Ensure doc popup is enabled
+		-- 	-- },
+		-- 	experimental = {
+		-- 		ghost_text = true,
+		-- 	},
+		-- })
+		--
 		vim.diagnostic.config({
 			-- update_in_insert = true,
 			float = {
 				focusable = false,
 				style = "minimal",
 				border = "rounded",
-				source = "always",
+				-- source = "true",
 				header = "",
 				prefix = "",
 			},

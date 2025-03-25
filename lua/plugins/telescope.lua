@@ -57,6 +57,8 @@ return {
 					"!**/node_modules/*", -- Exclude node_modules directory
 					"--glob",
 					"!**/.git/*",
+					"--glob",
+					"!**/dist/*", -- Exclude dist directory
 				},
 			})
 		end, {})
