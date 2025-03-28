@@ -118,7 +118,7 @@ return {
 	},
 
 	config = function()
-		vim.lsp.set_log_level(0)
+		vim.lsp.set_log_level("ERROR")
 		-- keymaps
 		local key_opts = {}
 		vim.keymap.set("n", "K", vim.lsp.buf.hover, key_opts)
@@ -134,9 +134,27 @@ return {
 		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
 		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
 
+		local border = {
+			{ "╭", "FloatBorder" },
+			{ "─", "FloatBorder" },
+			{ "╮", "FloatBorder" },
+			{ "│", "FloatBorder" },
+			{ "╯", "FloatBorder" },
+			{ "─", "FloatBorder" },
+			{ "╰", "FloatBorder" },
+			{ "│", "FloatBorder" },
+		}
+
+		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+			border = border,
+		})
+
+		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
+			border = border,
+		})
 		-- local cmp = require("cmp")
 		-- local cmp_lsp = require("cmp_nvim_lsp")
-		config = function(_, opts)
+		local config = function(_, opts)
 			local lspconfig = require("lspconfig")
 			for server, config in pairs(opts.servers) do
 				-- passing config.capabilities to blink.cmp merges with the capabilities in your

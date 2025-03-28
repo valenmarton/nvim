@@ -8,8 +8,8 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 -- better half page scroll
-vim.keymap.set("n", "<C-d>", "10jzz")
-vim.keymap.set("n", "<C-u>", "10kzz")
+vim.keymap.set("n", "<C-d>", "<C-d>zz")
+vim.keymap.set("n", "<C-u>", "<C-u>zz")
 
 -- clipboard
 vim.keymap.set("n", "x", '"_x')
@@ -46,5 +46,5 @@ end)
 vim.keymap.set("n", "[q", ":cnext<cr>")
 vim.keymap.set("n", "]q", ":cprev<cr>")
 
-vim.keymap.set("n", "<C-s>", "5j")
-vim.keymap.set("n", "<C-f>", "5k")
+vim.keymap.set("n", "<C-s>", ":bp<cr>")
+vim.keymap.set("n", "<C-f>", ":bn<cr>")

@@ -1,7 +1,6 @@
 return {
 	"saghen/blink.cmp",
-	tag = "v0.14.2",
-
+	version = "1.0",
 	-- optional: provides snippets for the snippet source
 	disabled = true,
 	---@module 'blink.cmp'
@@ -22,15 +21,18 @@ return {
 		-- (Default) Only show the documentation popup when manually triggered
 		completion = {
 			accept = { auto_brackets = { enabled = false } },
-			documentation = { auto_show = true, window = { border = "solid" } },
+			documentation = { auto_show = true, window = { border = "rounded" } },
 			list = { selection = { preselect = false, auto_insert = true } },
 			menu = {
+				border = "rounded",
 				-- nvim-cmp style menu
 				draw = {
 					columns = {
 						{ "label", "label_description", gap = 1 },
 						{ "kind" },
+						-- { "label_description" },
 					},
+					treesitter = { "lsp" },
 				},
 			},
 		},
