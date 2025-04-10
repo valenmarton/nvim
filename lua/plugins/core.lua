@@ -25,6 +25,7 @@ return {
 		end,
 		ft = { "markdown" },
 	},
+	{ "rebelot/kanagawa.nvim", config = function() end },
 	{
 		"sainnhe/gruvbox-material",
 		config = function()
@@ -52,7 +53,9 @@ return {
 	-- I have a separate config.mappings file where I require which-key.
 	-- With lazy the plugin will be automatically loaded when it is required somewhere
 	{ "folke/which-key.nvim", lazy = true },
-	{ "folke/zen-mode.nvim" },
+	{ "folke/zen-mode.nvim", keys = {
+		{ "<leader>z", "<cmd>ZenMode<cr>" },
+	} },
 	{
 		"dstein64/vim-startuptime",
 		-- lazy-load on a command
@@ -64,6 +67,7 @@ return {
 	},
 	{
 		"Wansmer/treesj",
+		enabled = false,
 		keys = {
 			{ "J", "<cmd>TSJToggle<cr>", desc = "Join Toggle" },
 		},

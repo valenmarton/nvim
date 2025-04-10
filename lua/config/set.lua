@@ -1,7 +1,7 @@
 -- basic nvim option settings
 vim.opt.guicursor = ""
-vim.opt.statusline = "=== %f ==="
-vim.opt.ignorecase = true
+-- vim.opt.statusline = "=== %f ==="
+-- vim.opt.ignorecase = true
 
 -- vim.opt.cursorline = true
 vim.opt.nu = true

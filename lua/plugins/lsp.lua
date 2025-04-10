@@ -118,10 +118,12 @@ return {
 	},
 
 	config = function()
-		vim.lsp.set_log_level("ERROR")
+		-- vim.lsp.set_log_level("ERROR")
 		-- keymaps
 		local key_opts = {}
-		vim.keymap.set("n", "K", vim.lsp.buf.hover, key_opts)
+		vim.keymap.set("n", "K", function()
+			vim.lsp.buf.hover({ border = "rounded" })
+		end, key_opts)
 		vim.keymap.set("n", "gcf", vim.lsp.buf.format, key_opts)
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, key_opts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, key_opts)
@@ -133,25 +135,26 @@ return {
 		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, key_opts)
 		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
 		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
+		-- local border = {
+		-- 	{ "╭", "FloatBorder" },
+		-- 	{ "─", "FloatBorder" },
+		-- 	{ "╮", "FloatBorder" },
+		-- 	{ "│", "FloatBorder" },
+		-- 	{ "╯", "FloatBorder" },
+		-- 	{ "─", "FloatBorder" },
+		-- 	{ "╰", "FloatBorder" },
+		-- 	{ "│", "FloatBorder" },
+		-- }
 
-		local border = {
-			{ "╭", "FloatBorder" },
-			{ "─", "FloatBorder" },
-			{ "╮", "FloatBorder" },
-			{ "│", "FloatBorder" },
-			{ "╯", "FloatBorder" },
-			{ "─", "FloatBorder" },
-			{ "╰", "FloatBorder" },
-			{ "│", "FloatBorder" },
-		}
-
-		vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-			border = border,
-		})
-
-		vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {
-			border = border,
-		})
+		-- vim.lsp.util.open_floating_preview({ border = true })
+		--
+		-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.hover, {
+		-- 	border = border,
+		-- })
+		--
+		-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.signature_help, {
+		-- 	border = border,
+		-- })
 		-- local cmp = require("cmp")
 		-- local cmp_lsp = require("cmp_nvim_lsp")
 		local config = function(_, opts)

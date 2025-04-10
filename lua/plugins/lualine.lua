@@ -1,6 +1,6 @@
 return {
 	"nvim-lualine/lualine.nvim",
-	-- enabled = false,
+	enabled = false,
 	opts = {},
 	config = function()
 		local clients_lsp = function()

@@ -3,7 +3,7 @@ return {
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo" },
 	enabled = true,
-	branch = "nvim-0.9",
+	-- branch = "nvim-0.9",
 	config = function()
 		require("conform").setup({
 			-- this will format on save by the default LSP's formatter, if no formatters are specified below

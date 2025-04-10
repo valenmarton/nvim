@@ -20,9 +20,9 @@ return {
 
 		-- (Default) Only show the documentation popup when manually triggered
 		completion = {
-			accept = { auto_brackets = { enabled = false } },
+			accept = { auto_brackets = { enabled = true } },
 			documentation = { auto_show = true, window = { border = "rounded" } },
-			list = { selection = { preselect = false, auto_insert = true } },
+			list = { selection = { preselect = true, auto_insert = true } },
 			menu = {
 				border = "rounded",
 				-- nvim-cmp style menu
