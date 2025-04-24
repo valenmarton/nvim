@@ -2,7 +2,7 @@ return {
 	"ThePrimeagen/harpoon",
 	config = function()
 		require("harpoon").setup({
-			tabline = true,
+			tabline = false,
 		})
 		local harpoon_ui = require("harpoon.ui")
 		local harpoon_mark = require("harpoon.mark")
