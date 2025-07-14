@@ -173,7 +173,7 @@ return {
 		-- 	vim.lsp.protocol.make_client_capabilities(),
 		-- 	cmp_lsp.default_capabilities()
 		-- )
-		require("java").setup()
+		-- require("java").setup()
 		require("mason").setup()
 		require("mason-lspconfig").setup({
 			automatic_installation = {},
