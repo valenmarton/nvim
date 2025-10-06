@@ -1,18 +1,18 @@
 return {
-	-- {
-	-- 	"github/copilot.vim",
-	-- 	config = function()
-	-- 		vim.g.copilot_no_tab_map = true
-	-- 		vim.api.nvim_set_keymap("i", "<Del>", 'copilot#Accept("\\<CR>")', {
-	-- 			expr = true,
-	-- 			silent = true,
-	-- 		})
-	--
-	-- 		vim.keymap.set("i", "<C-Del>", "<Plug>(copilot-dismiss)", {
-	-- 			silent = true,
-	-- 		})
-	-- 	end,
-	-- },
+	{
+		"github/copilot.vim",
+		config = function()
+			vim.g.copilot_no_tab_map = true
+			vim.api.nvim_set_keymap("i", "<Del>", 'copilot#Accept("\\<CR>")', {
+				expr = true,
+				silent = true,
+			})
+
+			vim.keymap.set("i", "<C-Del>", "<Plug>(copilot-dismiss)", {
+				silent = true,
+			})
+		end,
+	},
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
 		build = "make tiktoken",
