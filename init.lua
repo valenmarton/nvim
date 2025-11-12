@@ -2,6 +2,13 @@
 -- vim.env.PATH = vim.env.PATH .. ";/home/youruser/.local/share/nvim/mason/bin"
 vim.env.PATH = "/home/martonv/.local/share/nvim/mason/bin:" .. vim.env.PATH
 
+-- neovim-remote for opening file from lazygit in neovim instance
+if vim.fn.executable("nvr") == 1 then
+	vim.env.GIT_EDITOR = "nvr --remote-tab-wait +'set bufhidden=delete'"
+else
+	print("nvr not found in PATH, git commit messages will not open in Neovim")
+end
+
 vim.api.nvim_create_user_command("SetCwdToCurrentFile", function()
 	local current_file = vim.fn.expand("%:p")
 	local current_directory = vim.fn.fnamemodify(current_file, ":h")

@@ -43,8 +43,8 @@ vim.keymap.set("n", "<leader>q", function()
 		vim.cmd("copen")
 	end
 end)
-vim.keymap.set("n", "[q", ":cnext<cr>")
-vim.keymap.set("n", "]q", ":cprev<cr>")
+vim.keymap.set("n", "]q", ":cnext<cr>")
+vim.keymap.set("n", "[q", ":cprev<cr>")
 
 -- vim.keymap.set("n", "<C-s>", ":bp<cr>")
 -- vim.keymap.set("n", "<C-f>", ":bn<cr>")

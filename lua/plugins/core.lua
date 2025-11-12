@@ -16,6 +16,7 @@ return {
 			vim.cmd([[colorscheme rose-pine]])
 		end,
 	},
+	{ "RRethy/nvim-base16" },
 	{
 		"zenbones-theme/zenbones.nvim",
 		-- Optionally install Lush. Allows for more configuration or extending the colorscheme

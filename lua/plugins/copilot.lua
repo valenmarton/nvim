@@ -1,6 +1,7 @@
 return {
 	{
 		"github/copilot.vim",
+		enabled = false,
 		config = function()
 			vim.g.copilot_no_tab_map = true
 			vim.api.nvim_set_keymap("i", "<Del>", 'copilot#Accept("\\<CR>")', {
@@ -15,11 +16,16 @@ return {
 	},
 	{
 		"CopilotC-Nvim/CopilotChat.nvim",
+		enabled = true,
 		build = "make tiktoken",
 		opts = {},
+		keys = {
+			{ "<leader>cc", "<cmd>CopilotChat<cr>", desc = "Open Copilot Chat" },
+		},
 	},
 	{
 		"zbirenbaum/copilot.lua",
+		enabled = false,
 		cmd = "Copilot",
 		event = "InsertEnter",
 		config = true,
