@@ -2,69 +2,42 @@ return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
 		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
 		"saghen/blink.cmp",
 	},
 
 	config = function()
+		-- ------------------------------------------------------------------
+		-- Logging (disable once stable)
+		-- ------------------------------------------------------------------
 		vim.lsp.set_log_level("DEBUG")
-		vim.g.lspconfig_ts_ls = 1 -- Mark that we're handling ts_ls
 
-		-- Debug: print when ts_ls tries to start
-		vim.api.nvim_create_autocmd("FileType", {
-			pattern = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
-			callback = function()
-				-- print("FileType triggered for: " .. vim.bo.filetype)
-				-- print("Active clients: " .. #vim.lsp.get_active_clients())
-			end,
-		})
-
-		-- Create debug command
-		-- vim.api.nvim_create_user_command('LspSettings', function()
-		--   local clients = vim.lsp.get_active_clients()
-		--   for _, client in ipairs(clients) do
-		--     if client.name == 'ts_ls' then
-		--       -- print(vim.inspect({
-		--       --   init_options = client.config.init_options,
-		--       --   settings = client.config.settings
-		--       -- }))
-		--     end
-		--   end
-		-- end, {})
-
-		-- Get capabilities from blink.cmp
+		-- ------------------------------------------------------------------
+		-- Capabilities (blink.cmp)
+		-- ------------------------------------------------------------------
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
 
-		-- Setup Mason
-		-- ts_ls, eslint-lsp, stylua, lua_ls
+		-- ------------------------------------------------------------------
+		-- Mason (ONLY installs binaries)
+		-- ------------------------------------------------------------------
 		require("mason").setup()
-		-- require("mason-lspconfig").setup({
-		--   automatic_installation = false, -- Changed to false!
-		--   ensure_installed = {
-		--     "lua_ls",
-		--     "ts_ls",
-		--   },
-		--   handlers = {
-		--     -- Disable default handler completely
-		--     function(server_name)
-		--       if server_name == "ts_ls" then
-		--         return
-		--       end
-		--     end,
-		--   },
-		-- })
 
-		-- Setup servers manually AFTER mason-lspconfig
-		local lspconfig = require("lspconfig")
-
-		-- Lua LS
-		lspconfig.lua_ls.setup({
+		-- ------------------------------------------------------------------
+		-- Lua Language Server
+		-- ------------------------------------------------------------------
+		vim.lsp.config("lua_ls", {
 			capabilities = capabilities,
 			settings = {
 				Lua = {
 					runtime = { version = "LuaJIT" },
 					diagnostics = {
-						globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+						globals = {
+							"vim",
+							"bit",
+							"it",
+							"describe",
+							"before_each",
+							"after_each",
+						},
 					},
 					telemetry = { enable = false },
 					workspace = {
@@ -74,8 +47,10 @@ return {
 			},
 		})
 
-		-- TypeScript/JavaScript LS
-		lspconfig.ts_ls.setup({
+		-- ------------------------------------------------------------------
+		-- TypeScript / JavaScript Language Server
+		-- ------------------------------------------------------------------
+		vim.lsp.config("ts_ls", {
 			capabilities = capabilities,
 			init_options = {
 				hostInfo = "neovim",
@@ -95,8 +70,6 @@ return {
 						includeInlayPropertyDeclarationTypeHints = true,
 						includeInlayFunctionLikeReturnTypeHints = true,
 						includeInlayEnumMemberValueHints = true,
-						importModuleSpecifierPreference = "relative",
-						importModuleSpecifierEnding = "minimal",
 					},
 				},
 				javascript = {
@@ -105,8 +78,10 @@ return {
 			},
 		})
 
-		-- ESLint (only if installed)
-		lspconfig.eslint.setup({
+		-- ------------------------------------------------------------------
+		-- ESLint (diagnostics ONLY, no code actions)
+		-- ------------------------------------------------------------------
+		vim.lsp.config("eslint", {
 			capabilities = capabilities,
 			settings = {
 				codeAction = {
@@ -115,7 +90,7 @@ return {
 						location = "separateLine",
 					},
 					showDocumentation = {
-						enable = false, -- Disable this
+						enable = false,
 					},
 				},
 				codeActionOnSave = {
@@ -123,13 +98,15 @@ return {
 					mode = "all",
 				},
 			},
-			-- Only use eslint for diagnostics, not code actions
-			on_attach = function(client, bufnr)
+			on_attach = function(client)
 				client.server_capabilities.codeActionProvider = false
 			end,
 		})
-		-- Java JDTLS
-		lspconfig.jdtls.setup({
+
+		-- ------------------------------------------------------------------
+		-- Java (JDTLS)
+		-- ------------------------------------------------------------------
+		vim.lsp.config("jdtls", {
 			capabilities = capabilities,
 			settings = {
 				java = {
@@ -155,23 +132,39 @@ return {
 			},
 		})
 
+		-- ------------------------------------------------------------------
+		-- Enable servers (IMPORTANT!)
+		-- ------------------------------------------------------------------
+		vim.lsp.enable({
+			"lua_ls",
+			"ts_ls",
+			"eslint",
+			"jdtls",
+		})
+
+		-- ------------------------------------------------------------------
 		-- Keymaps
+		-- ------------------------------------------------------------------
 		local key_opts = {}
+
 		vim.keymap.set("n", "K", function()
 			vim.lsp.buf.hover({ border = "rounded" })
 		end, key_opts)
-		vim.keymap.set("n", "gcf", vim.lsp.buf.format, key_opts)
+
 		vim.keymap.set("n", "gd", vim.lsp.buf.definition, key_opts)
 		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, key_opts)
 		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, key_opts)
+		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
+		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, key_opts)
+		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
+
 		vim.keymap.set("n", "]d", vim.diagnostic.goto_next, key_opts)
 		vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, key_opts)
 		vim.keymap.set("n", "gl", vim.diagnostic.open_float, key_opts)
-		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, key_opts)
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
-		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
 
-		-- Diagnostic config
+		-- ------------------------------------------------------------------
+		-- Diagnostics UI
+		-- ------------------------------------------------------------------
 		vim.diagnostic.config({
 			float = {
 				focusable = false,
