@@ -17,4 +17,7 @@ return {
 		{ "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
 		{ "<leader>gl", "<cmd>LazyGitLog<cr>", desc = "LazyGit" },
 	},
+	config = function()
+		vim.g.lazygit_floating_window_scaling_factor = 1
+	end,
 }
