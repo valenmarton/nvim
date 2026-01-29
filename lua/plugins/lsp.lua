@@ -99,7 +99,7 @@ return {
 						location = "separateLine",
 					},
 					showDocumentation = {
-						enable = false,
+						enable = true,
 					},
 				},
 				codeActionOnSave = {
@@ -108,7 +108,7 @@ return {
 				},
 			},
 			on_attach = function(client)
-				client.server_capabilities.codeActionProvider = false
+				-- client.server_capabilities.codeActionProvider = false
 			end,
 		})
 
