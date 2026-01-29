@@ -22,6 +22,7 @@ return {
 				-- Conform will run the first available formatter
 				javascript = { "prettier", "prettierd", stop_after_first = true },
 				typescript = { "prettier" },
+				-- yaml = { "yamlfix" },
 			},
 		})
 	end,
