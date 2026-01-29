@@ -1,358 +1,184 @@
--- return {
---     "neovim/nvim-lspconfig",
---     dependencies = {
---         "VonHeikemen/lsp-zero.nvim",
---         "williamboman/mason.nvim",
---         "williamboman/mason-lspconfig.nvim",
---     },
-
---     config = function()
---         vim.lsp.set_log_level("debug")
---
---         require("mason").setup()
---         -- Add cmp_nvim_lsp capabilities settings to lspconfig
---         -- This should be executed before you configure any language server
---         local lspconfig_defaults = require('lspconfig').util.default_config
---         lspconfig_defaults.capabilities = vim.tbl_deep_extend(
---             'force',
---             lspconfig_defaults.capabilities,
---             require('cmp_nvim_lsp').default_capabilities()
---         )
---
---         -- This is where you enable features that only work
---         -- if there is a language server active in the file
---         vim.api.nvim_create_autocmd('LspAttach', {
---             desc = 'LSP actions',
---             callback = function(event)
---                 local opts = { buffer = event.buf }
---                 vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
---                 vim.keymap.set("n", "gd", vim.lsp.buf.definition, opts)
---                 vim.keymap.set("n", "gD", vim.lsp.buf.declaration, opts)
---                 vim.keymap.set("n", "gi", vim.lsp.buf.implementation, opts)
---                 vim.keymap.set("n", "[d", vim.diagnostic.goto_next, opts)
---                 vim.keymap.set("n", "]d", vim.diagnostic.goto_prev, opts)
---                 vim.keymap.set("n", "gl", vim.diagnostic.open_float, opts)
---                 vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
---                 vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
---                 vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, opts)
---                 vim.keymap.set({ 'n', 'x' }, '<gf>', '<cmd>lua vim.lsp.buf.format({async = true})<cr>', opts)
---             end,
---         })
---         -- LSP server configs
---         require('lspconfig').ts_ls.setup({})
---         require('lspconfig').eslint.setup({
---
---             cmd = { '/home/martonv/.local/share/nvim/mason/packages/eslint-lsp/node_modules/.bin/vscode-eslint-language-server', '--stdio' }
---         })
---         require('lspconfig').lua_ls.setup({
---             settings = {
---                 Lua = {
---                     runtime = { version = "Lua 5.1" },
---                     diagnostics = {
---                         globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
---                     },
---                 },
---             },
---         })
---
---         -- autocomplete
---         local cmp = require('cmp')
---         cmp.setup({
---             -- snippet = {
---             --     expand = function(args)
---             --         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
---             --     end,
---             -- },
---             mapping = cmp.mapping.preset.insert({
---                 ["<Tab>"] = cmp.mapping(function(fallback)
---                     if cmp.visible() then
---                         cmp.select_next_item()
---                     else
---                         fallback()
---                     end
---                 end, { "i" }),
---                 ["<S-Tab>"] = cmp.mapping(function(fallback)
---                     if cmp.visible() then
---                         cmp.select_prev_item()
---                     else
---                         fallback()
---                     end
---                 end, { "i" }),
---                 ['<C-Space>'] = cmp.mapping.complete(),
---                 ['<C-e>'] = cmp.mapping.abort(),
---                 ["<CR>"] = cmp.mapping.confirm({ select = false }),
---             }),
---             sources = cmp.config.sources({
---                 { name = "nvim_lsp" },
---                 { name = "path" },
---                 -- { name = 'vsnip' }, -- For vsnip users.
---                 -- { name = 'luasnip' }, -- For luasnip users.
---                 -- { name = 'ultisnips' }, -- For ultisnips users.
---                 -- { name = 'snippy' }, -- For snippy users.
---             }, {
---                 { name = "buffer" },
---             }),
---         })
---
---         vim.diagnostic.config({
---             -- update_in_insert = true,
---             float = {
---                 focusable = false,
---                 style = "minimal",
---                 border = "rounded",
---                 source = "always",
---                 header = "",
---                 prefix = "",
---             },
---         })
---     end
---
---
--- }
 return {
-	"neovim/nvim-lspconfig",
-	dependencies = {
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
-		"saghen/blink.cmp",
-	},
+  "neovim/nvim-lspconfig",
+  dependencies = {
+    "williamboman/mason.nvim",
+    "williamboman/mason-lspconfig.nvim",
+    "saghen/blink.cmp",
+  },
 
-	config = function()
-		-- vim.lsp.set_log_level("ERROR")
-		-- keymaps
-		local key_opts = {}
-		vim.keymap.set("n", "K", function()
-			vim.lsp.buf.hover({ border = "rounded" })
-		end, key_opts)
-		vim.keymap.set("n", "gcf", vim.lsp.buf.format, key_opts)
-		vim.keymap.set("n", "gd", vim.lsp.buf.definition, key_opts)
-		vim.keymap.set("n", "gD", vim.lsp.buf.declaration, key_opts)
-		vim.keymap.set("n", "gi", vim.lsp.buf.implementation, key_opts)
-		-- vim.keymap.set("n", "gr", vim.lsp.buf.references, key_opts)
-		vim.keymap.set("n", "]d", vim.diagnostic.goto_next, key_opts)
-		vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, key_opts)
-		vim.keymap.set("n", "gl", vim.diagnostic.open_float, key_opts)
-		vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, key_opts)
-		vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
-		vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
-		-- local border = {
-		-- 	{ "╭", "FloatBorder" },
-		-- 	{ "─", "FloatBorder" },
-		-- 	{ "╮", "FloatBorder" },
-		-- 	{ "│", "FloatBorder" },
-		-- 	{ "╯", "FloatBorder" },
-		-- 	{ "─", "FloatBorder" },
-		-- 	{ "╰", "FloatBorder" },
-		-- 	{ "│", "FloatBorder" },
-		-- }
+  config = function()
+    vim.lsp.set_log_level("DEBUG")
+    vim.g.lspconfig_ts_ls = 1 -- Mark that we're handling ts_ls
 
-		-- vim.lsp.util.open_floating_preview({ border = true })
-		--
-		-- vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.hover, {
-		-- 	border = border,
-		-- })
-		--
-		-- vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.signature_help, {
-		-- 	border = border,
-		-- })
-		-- local cmp = require("cmp")
-		-- local cmp_lsp = require("cmp_nvim_lsp")
-		local config = function(_, opts)
-			local lspconfig = require("lspconfig")
-			for server, config in pairs(opts.servers) do
-				-- passing config.capabilities to blink.cmp merges with the capabilities in your
-				-- `opts[server].capabilities, if you've defined it
-				config.capabilities = require("blink.cmp").get_lsp_capabilities(config.capabilities)
-				lspconfig[server].setup(config)
-			end
-		end
+    -- Debug: print when ts_ls tries to start
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = { "typescript", "typescriptreact", "javascript", "javascriptreact" },
+      callback = function()
+        -- print("FileType triggered for: " .. vim.bo.filetype)
+        -- print("Active clients: " .. #vim.lsp.get_active_clients())
+      end,
+    })
 
-		-- local capabilities = vim.tbl_deep_extend(
-		-- 	"force",
-		-- 	{},
-		-- 	vim.lsp.protocol.make_client_capabilities(),
-		-- 	cmp_lsp.default_capabilities()
-		-- )
-		-- require("java").setup()
-		require("mason").setup()
-		require("mason-lspconfig").setup({
-			automatic_installation = {},
-			ensure_installed = {
-				"lua_ls",
-				"ts_ls",
-			},
-			handlers = {
-				function(server_name) -- default handler, if no other ls handler is specified (optional)
-					require("lspconfig")[server_name].setup({})
-				end,
-				["lua_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup({
-						capabilities = capabilities,
-						settings = {
-							Lua = {
-								runtime = { version = "LuaJIT" },
-								diagnostics = {
-									globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-								},
-								telemetry = { enable = false },
-								workspace = {
-									library = vim.api.nvim_get_runtime_file("", true),
-								},
-							},
-						},
-					})
-				end,
-				["ts_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.ts_ls.setup({
-						init_options = {
-							preferences = {
-								-- other preferences...
-								importModuleSpecifierPreference = "relative",
-								importModuleSpecifierEnding = "minimal",
-							},
-						},
-						-- cmd = { "/home/martonv/.local/share/nvim/mason/bin/typescript-language-server", "--stdio", "--log-level", "trace" },
-						-- trace = "verbose",
-						-- on_attach = function(client, bufnr)
-						-- 	-- This callback ensures that the LSP is attached to the buffer
-						-- 	-- You can also add any custom logic here (e.g., keybindings)
-						-- 	print("Attached to buffer:", bufnr)
-						-- end,
-						capabilities = capabilities,
-						settings = {
-							-- typescript = {
-							-- 	importModuleSpecifierPreference = "relative",
-							-- 	importModuleSpecifierEnding = "minimal",
-							-- },
-							javascript = {
-								enable = false,
-								format = {
-									enable = false,
-									insertSpaceBeforeFunctionParenthesis = true,
-									insertSpaceAfterConstructor = true,
-									insertSpaceAfterFunctionKeywordForAnonymousFunctions = true,
-									-- insertSpaceAfterOpeningAndBeforeClosingNonemptyParenthesis = true
-								},
-								-- trace = { server = "verbose" }, -- Enable verbose tracing
-							},
-						},
-					})
-				end,
-				["eslint"] = function()
-					local lspconfig = require("lspconfig")
-					-- Call has_eslintrc() to evaluate the condition
-					lspconfig.eslint.setup({
-						capabilities = capabilities,
-						settings = {
-							-- validate = "off",
-							-- quiet = true,
-							-- silent = true,
-							-- eslint = {
-							--     enable = false,
-							--     autoFixOnSave = true,
-							--     format = {
-							--         enable = false
-							--     }
-							-- }
-						},
-					})
-				end,
-				["jdtls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.jdtls.setup({
-						settings = {
-							java = {
-								contentProvider = { preferred = "fernflower" }, -- Ensures decompiled sources are available
-								format = { enabled = true },
-								maven = { downloadSources = true },
-								referencesCodeLens = { enabled = true },
-								implementationsCodeLens = { enabled = true },
-								signatureHelp = { enabled = true },
-								completion = {
-									enabled = true,
-									favoriteStaticMembers = {
-										"org.junit.Assert.*",
-										"org.mockito.Mockito.*",
-									},
-									filteredTypes = {
-										"com.sun.*",
-										"java.awt.*",
-										"sun.*",
-									},
-								},
-							},
-						},
-					})
-				end,
-			},
-		})
+    -- Create debug command
+    -- vim.api.nvim_create_user_command('LspSettings', function()
+    --   local clients = vim.lsp.get_active_clients()
+    --   for _, client in ipairs(clients) do
+    --     if client.name == 'ts_ls' then
+    --       -- print(vim.inspect({
+    --       --   init_options = client.config.init_options,
+    --       --   settings = client.config.settings
+    --       -- }))
+    --     end
+    --   end
+    -- end, {})
 
-		-- TODO: swap cmp to blink
-		-- cmp.setup({
-		-- 	-- snippet = {
-		-- 	--     expand = function(args)
-		-- 	--         require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
-		-- 	--     end,
-		-- 	-- },
-		-- 	mapping = cmp.mapping.preset.insert({
-		-- 		["<Tab>"] = cmp.mapping(function(fallback)
-		-- 			if cmp.visible() then
-		-- 				cmp.select_next_item()
-		-- 			else
-		-- 				fallback()
-		-- 			end
-		-- 		end, { "i" }),
-		-- 		["<S-Tab>"] = cmp.mapping(function(fallback)
-		-- 			if cmp.visible() then
-		-- 				cmp.select_prev_item()
-		-- 			else
-		-- 				fallback()
-		-- 			end
-		-- 		end, { "i" }),
-		-- 		["<C-Space>"] = cmp.mapping.complete(),
-		-- 		["<C-e>"] = cmp.mapping.abort(),
-		-- 		["<CR>"] = cmp.mapping.confirm({ select = false }),
-		-- 	}),
-		-- 	sources = cmp.config.sources({
-		-- 		{ name = "nvim_lsp", keyword_length = 0 },
-		-- 		{ name = "path" },
-		-- 		-- { name = 'vsnip' }, -- For vsnip users.
-		-- 		-- { name = 'luasnip' }, -- For luasnip users.
-		-- 		-- { name = 'ultisnips' }, -- For ultisnips users.
-		-- 		-- { name = 'snippy' }, -- For snippy users.
-		-- 	}, {
-		-- 		{ name = "buffer" },
-		-- 	}),
-		-- 	formatting = {
-		-- 		format = function(entry, vim_item)
-		-- 			-- Show Javadoc in completion
-		-- 			vim_item.menu = ({
-		-- 				nvim_lsp = "[LSP]",
-		-- 			})[entry.source.name]
-		-- 			return vim_item
-		-- 		end,
-		-- 	},
-		-- 	-- window = {
-		-- 	--     completion = cmp.config.window.bordered(),
-		-- 	--     documentation = cmp.config.window.bordered(), -- Ensure doc popup is enabled
-		-- 	-- },
-		-- 	experimental = {
-		-- 		ghost_text = true,
-		-- 	},
-		-- })
-		--
-		vim.diagnostic.config({
-			-- update_in_insert = true,
-			float = {
-				focusable = false,
-				style = "minimal",
-				border = "rounded",
-				-- source = "true",
-				header = "",
-				prefix = "",
-			},
-		})
-	end,
+    -- Get capabilities from blink.cmp
+    local capabilities = require("blink.cmp").get_lsp_capabilities()
+
+    -- Setup Mason
+    require("mason").setup()
+    -- require("mason-lspconfig").setup({
+    --   automatic_installation = false, -- Changed to false!
+    --   ensure_installed = {
+    --     "lua_ls",
+    --     "ts_ls",
+    --   },
+    --   handlers = {
+    --     -- Disable default handler completely
+    --     function(server_name)
+    --       if server_name == "ts_ls" then
+    --         return
+    --       end
+    --     end,
+    --   },
+    -- })
+
+    -- Setup servers manually AFTER mason-lspconfig
+    local lspconfig = require("lspconfig")
+
+    -- Lua LS
+    lspconfig.lua_ls.setup({
+      capabilities = capabilities,
+      settings = {
+        Lua = {
+          runtime = { version = "LuaJIT" },
+          diagnostics = {
+            globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+          },
+          telemetry = { enable = false },
+          workspace = {
+            library = vim.api.nvim_get_runtime_file("", true),
+          },
+        },
+      },
+    })
+
+    -- TypeScript/JavaScript LS
+    lspconfig.ts_ls.setup({
+      capabilities = capabilities,
+      init_options = {
+        hostInfo = "neovim",
+        preferences = {
+          importModuleSpecifierPreference = "relative",
+          importModuleSpecifierEnding = "minimal",
+        },
+      },
+      settings = {
+        typescript = {
+          format = { enable = false },
+          inlayHints = {
+            includeInlayParameterNameHints = "all",
+            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+            includeInlayFunctionParameterTypeHints = true,
+            includeInlayVariableTypeHints = true,
+            includeInlayPropertyDeclarationTypeHints = true,
+            includeInlayFunctionLikeReturnTypeHints = true,
+            includeInlayEnumMemberValueHints = true,
+            importModuleSpecifierPreference = "relative",
+            importModuleSpecifierEnding = "minimal",
+          },
+        },
+        javascript = {
+          format = { enable = false },
+        },
+      },
+    })
+
+    -- ESLint (only if installed)
+    lspconfig.eslint.setup({
+      capabilities = capabilities,
+      settings = {
+        codeAction = {
+          disableRuleComment = {
+            enable = true,
+            location = "separateLine"
+          },
+          showDocumentation = {
+            enable = false   -- Disable this
+          }
+        },
+        codeActionOnSave = {
+          enable = false,
+          mode = "all"
+        },
+      },
+      -- Only use eslint for diagnostics, not code actions
+      on_attach = function(client, bufnr)
+        client.server_capabilities.codeActionProvider = false
+      end,
+    })
+    -- Java JDTLS
+    lspconfig.jdtls.setup({
+      capabilities = capabilities,
+      settings = {
+        java = {
+          contentProvider = { preferred = "fernflower" },
+          format = { enabled = true },
+          maven = { downloadSources = true },
+          referencesCodeLens = { enabled = true },
+          implementationsCodeLens = { enabled = true },
+          signatureHelp = { enabled = true },
+          completion = {
+            enabled = true,
+            favoriteStaticMembers = {
+              "org.junit.Assert.*",
+              "org.mockito.Mockito.*",
+            },
+            filteredTypes = {
+              "com.sun.*",
+              "java.awt.*",
+              "sun.*",
+            },
+          },
+        },
+      },
+    })
+
+    -- Keymaps
+    local key_opts = {}
+    vim.keymap.set("n", "K", function()
+      vim.lsp.buf.hover({ border = "rounded" })
+    end, key_opts)
+    vim.keymap.set("n", "gcf", vim.lsp.buf.format, key_opts)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, key_opts)
+    vim.keymap.set("n", "gD", vim.lsp.buf.declaration, key_opts)
+    vim.keymap.set("n", "gi", vim.lsp.buf.implementation, key_opts)
+    vim.keymap.set("n", "]d", vim.diagnostic.goto_next, key_opts)
+    vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, key_opts)
+    vim.keymap.set("n", "gl", vim.diagnostic.open_float, key_opts)
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, key_opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, key_opts)
+    vim.keymap.set("i", "<C-h>", vim.lsp.buf.signature_help, key_opts)
+
+    -- Diagnostic config
+    vim.diagnostic.config({
+      float = {
+        focusable = false,
+        style = "minimal",
+        border = "rounded",
+        header = "",
+        prefix = "",
+      },
+    })
+  end,
 }
