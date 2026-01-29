@@ -1,7 +1,8 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		"williamboman/mason.nvim",
+		"mason-org/mason.nvim",
+		"mason-org/mason-lspconfig.nvim",
 		"saghen/blink.cmp",
 	},
 
@@ -20,6 +21,14 @@ return {
 		-- Mason (ONLY installs binaries)
 		-- ------------------------------------------------------------------
 		require("mason").setup()
+		-- require("mason-lspconfig").setup({
+		-- 	ensure_installed = { "lua_ls", "" },
+		-- })
+		-- ◍ eslint-lsp
+		-- ◍ lua-language-server
+		-- ◍ prettier
+		-- ◍ stylua
+		-- ◍ typescript-language-server
 
 		-- ------------------------------------------------------------------
 		-- Lua Language Server
