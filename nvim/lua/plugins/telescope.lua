@@ -1,23 +1,13 @@
 return {
   "nvim-telescope/telescope.nvim",
-  tag = "0.1.8",
-  -- or                              , branch = '0.1.x',
   dependencies = {
     "nvim-lua/plenary.nvim",
   },
   config = function()
     local actions = require("telescope.actions")
+    local opts = {}
 
     require("telescope").setup({
-      extensions = {
-        fzf = {
-          fuzzy = true,                   -- false will only do exact matching
-          override_generic_sorter = true, -- override the generic sorter
-          override_file_sorter = true,    -- override the file sorter
-          case_mode = "smart_case",       -- or "ignore_case" or "respect_case"
-          -- the default case_mode is "smart_case"
-        },
-      },
       defaults = {
         path_display = { "truncate" },
         layout_config = {
@@ -44,28 +34,34 @@ return {
 
     local builtin = require("telescope.builtin")
 
+    local function find_files_opts()
+      if vim.fn.executable("rg") == 1 then
+        return {
+          hidden = true,
+          no_ignore = true,
+          prompt_prefix = "All files > ",
+          find_command = {
+            "rg",
+            "--files",
+            "--hidden",
+            "--glob", "!**/node_modules/*",
+            "--glob", "!**/.git/*",
+            "--glob", "!**/dist/*",
+            "--glob", "!**/tmp/*",
+            "--glob", "!**/.idea/*",
+          },
+        }
+      end
+      return {
+        hidden = true,
+        no_ignore = true,
+        prompt_prefix = "All files > ",
+      }
+    end
+
     -- search for hidden files too
     vim.keymap.set("n", "<C-p>", function()
-      builtin.find_files({
-        hidden = true,                  -- Include hidden files (files starting with a dot)
-        no_ignore = true,               -- Don't ignore files based on `.gitignore` or similar
-        prompt_prefix = "All files > ", -- Custom title for the picker
-        find_command = {                -- Custom find command to exclude node_modules
-          "rg",                         -- Use ripgrep for faster searching
-          "--files",                    -- List files
-          "--hidden",                   -- Include hidden files
-          "--glob",
-          "!**/node_modules/*",         -- Exclude node_modules directory
-          "--glob",
-          "!**/.git/*",
-          "--glob",
-          "!**/dist/*",  -- Exclude dist directory
-          "--glob",
-          "!**/tmp/*",   -- Exclude dist directory
-          "--glob",
-          "!**/.idea/*", -- Exclude dist directory
-        },
-      })
+      builtin.find_files(find_files_opts())
     end, {})
     -- find directories
     -- vim.keymap.set("n", "<leader>fd", function()
@@ -78,10 +74,14 @@ return {
     -- end, {})
     -- dependencies: fd
     vim.keymap.set("n", "<leader>fd", function()
-      builtin.find_files({
-        prompt_prefix = "Directories > ",                                  -- Custom title for the picker
-        find_command = { "fd", "-t", "d", "--ignore-file", ".gitignore" }, -- Use fd with gitignore
-      })
+      if vim.fn.executable("fd") == 1 then
+        builtin.find_files({
+          prompt_prefix = "Directories > ",
+          find_command = { "fd", "-t", "d", "--ignore-file", ".gitignore" },
+        })
+      else
+        vim.notify("fd not found — install with: brew install fd", vim.log.levels.WARN)
+      end
     end, {})
     vim.keymap.set("n", "<leader>sql", builtin.quickfix, {})
     vim.keymap.set("n", "<leader>sqh", builtin.quickfixhistory, {})
